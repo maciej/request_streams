@@ -1,0 +1,35 @@
+class <%= class_name %> < ActiveRecord::Migration
+  def self.up
+    create_table :request_streams do |t|
+      t.integer :user_id, :null => true
+      t.datetime :last_request_at, :null => false
+      t.string :ip_address
+      t.string :user_agent
+      t.string :referer
+      t.integer :requests_count
+      t.timestamps
+    end
+    add_index :request_streams, :last_request_at
+    add_index :request_streams, :user_id
+    
+    create_table :requests do |t|
+      t.integer :request_stream_id, :null => false
+      t.string :path
+      t.string :method # The HTTP method
+      t.text :params
+      t.datetime :created_at
+    end
+    add_index :requests, :request_stream_id
+    add_index :requests, [:request_stream_id, :created_at], :name => "index_recent_by_stream"
+  end
+
+  def self.down
+    remove_index :requests, :name => "index_recent_by_stream"
+    remove_index :requests, :request_stream_id
+    drop_table :requests
+    
+    remove_index :request_streams, :user_id
+    remove_index :request_streams, :last_request_at
+    drop_table :request_streams
+  end
+end

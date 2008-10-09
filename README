@@ -1,0 +1,21 @@
+RequestStreams
+==============
+
+RequestStreams is a Rails plugin that enables logging of HTTP requests.
+It stores them in the DB.
+
+Example
+=======
+
+class ApplicationController < ActionController::Base
+	# (...)
+
+	log_requests	
+end
+
+Available options are:
+:if => :instance_method_name # longs only if the method returns evaluates to true
+:log_params => [true|false] # indicate whether params hash should also be logged
+
+
+Copyright (c) 2008 Maciej Bilas <maciej@inszy.org>, released under the MIT license
